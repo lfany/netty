@@ -1,7 +1,6 @@
 package cc.ifnot.discard;
 
 import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -10,20 +9,17 @@ public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
 
     private ChannelHandlerContext ctx;
     private ByteBuf content;
-    private ChannelFutureListener trafficGenerator = new ChannelFutureListener() {
-        @Override
-        public void operationComplete(ChannelFuture future) throws Exception {
-            if (future.isSuccess()) {
-                generateTraffic();
-            } else {
-                future.cause().printStackTrace();
-                future.channel().close();
-            }
+    private ChannelFutureListener trafficGenerator = future -> {
+        if (future.isSuccess()) {
+            generateTraffic();
+        } else {
+            future.cause().printStackTrace();
+            future.channel().close();
         }
     };
 
     @Override
-    public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(ChannelHandlerContext ctx) {
 //        super.channelActive(ctx);
         this.ctx = ctx;
         content = ctx.alloc().directBuffer(DiscardClient.SIZE).writeZero(DiscardClient.SIZE);
@@ -32,7 +28,7 @@ public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     @Override
-    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(ChannelHandlerContext ctx) {
 //        super.channelInactive(ctx);
         content.release();
     }
@@ -42,12 +38,12 @@ public class DiscardClientHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
         // Server is supposed to send nothing, but if it sends something, discard it.
     }
 
     @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception {
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
 //        super.exceptionCaught(ctx, cause);
         cause.printStackTrace();
         ctx.close();

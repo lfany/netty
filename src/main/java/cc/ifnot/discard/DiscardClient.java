@@ -13,9 +13,9 @@ import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.InsecureTrustManagerFactory;
 
 public final class DiscardClient {
-    static final boolean SSL = System.getProperty("ssl") != null;
-    static final String HOST = System.getProperty("host", "127.0.0.1");
-    static final int PORT = Integer.parseInt(System.getProperty("port", "8080"));
+    private static final boolean SSL = System.getProperty("ssl") != null;
+    private static final String HOST = System.getProperty("host", "127.0.0.1");
+    private static final int PORT = Integer.parseInt(System.getProperty("port", "8080"));
     static final int SIZE = Integer.parseInt(System.getProperty("size", "256"));
 
     public static void main(String[] args) throws Exception {
@@ -38,7 +38,7 @@ public final class DiscardClient {
                     .channel(NioSocketChannel.class)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
+                        protected void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
                             if (sslCtx != null)
                                 p.addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT));

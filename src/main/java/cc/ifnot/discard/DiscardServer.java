@@ -17,7 +17,7 @@ public class DiscardServer {
 
     private static boolean SSL = System.getProperty("ssl") != null;
 
-    public DiscardServer(int port) {
+    private DiscardServer(int port) {
         this.port = port;
     }
 
