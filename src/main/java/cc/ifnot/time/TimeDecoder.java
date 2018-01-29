@@ -21,6 +21,6 @@ public class TimeDecoder extends ReplayingDecoder<Void> {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-        out.add(in.readBytes(4));
+        out.add(new UnixTime(in.readUnsignedInt()));
     }
 }
