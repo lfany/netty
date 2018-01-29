@@ -8,17 +8,39 @@ import java.util.Date;
 
 public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
+    private ByteBuf buffer;
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) {
+//        super.handlerAdded(ctx);
+        buffer = ctx.alloc().buffer(4);
+    }
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) {
+//        super.handlerRemoved(ctx);
+        buffer.release();
+        buffer = null;
+    }
+
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
 //        super.channelRead(ctx, msg);
         ByteBuf m = (ByteBuf) msg;
-        try {
-            long currentTimeMillis = (m.readUnsignedInt() - 2208988800L) * 1000L;
+        buffer.writeBytes(m);
+        m.release();
+        if (buffer.readableBytes() >= 4) {
+            long currentTimeMillis = (buffer.readUnsignedInt() - 2208988800L) * 1000L;
             System.out.println(new Date(currentTimeMillis));
             ctx.close();
-        } finally {
-            m.release();
         }
+//        try {
+//            long currentTimeMillis = (m.readUnsignedInt() - 2208988800L) * 1000L;
+//            System.out.println(new Date(currentTimeMillis));
+//            ctx.close();
+//        } finally {
+//            m.release();
+//        }
     }
 
     @Override
