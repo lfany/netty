@@ -48,7 +48,7 @@ public class TimeServer {
                             ChannelPipeline p = ch.pipeline();
                             if (sslContext != null)
                                 p.addLast(sslContext.newHandler(ch.alloc()));
-                            p.addLast(new TimeServerHandler());
+                            p.addLast(new TimeEncoder(), new TimeServerHandler());
                         }
                     });
 

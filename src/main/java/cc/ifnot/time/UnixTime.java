@@ -15,7 +15,7 @@ public class UnixTime {
         this.value = value;
     }
 
-    private long value() {
+    long value() {
         return value;
     }
 

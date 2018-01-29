@@ -1,6 +1,5 @@
 package cc.ifnot.time;
 
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelHandlerContext;
@@ -11,14 +10,16 @@ public class TimeServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {
 //        super.channelActive(ctx);
-        ByteBuf time = ctx.alloc().buffer(4);
-        time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));
-
-        ChannelFuture f = ctx.writeAndFlush(time);
-        f.addListener((ChannelFutureListener) future -> {
-            assert f == future;
-            ctx.close();
-        });
+//        ByteBuf time = ctx.alloc().buffer(4);
+//        time.writeInt((int) (System.currentTimeMillis() / 1000L + 2208988800L));
+//
+//        ChannelFuture f = ctx.writeAndFlush(time);
+//        f.addListener((ChannelFutureListener) future -> {
+//            assert f == future;
+//            ctx.close();
+//        });
+        ChannelFuture f = ctx.writeAndFlush(new UnixTime());
+        f.addListener(ChannelFutureListener.CLOSE);
     }
 
     @Override
