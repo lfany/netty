@@ -7,7 +7,7 @@ public class UnixTime {
     private final long value;
 
     @SuppressWarnings("unused")
-    public UnixTime() {
+    UnixTime() {
         this(System.currentTimeMillis() / 1000L + 2208988800L);
     }
 

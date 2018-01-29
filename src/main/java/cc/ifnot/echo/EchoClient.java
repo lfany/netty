@@ -35,7 +35,7 @@ public final class EchoClient {
                     .option(ChannelOption.TCP_NODELAY, true)
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
-                        protected void initChannel(SocketChannel ch) throws Exception {
+                        protected void initChannel(SocketChannel ch) {
                             ChannelPipeline p = ch.pipeline();
                             if (sslCtx != null)
                                 p.addLast(sslCtx.newHandler(ch.alloc(), HOST, PORT));
