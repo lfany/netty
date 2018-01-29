@@ -46,7 +46,7 @@ public class TimeClient {
                             ChannelPipeline p = ch.pipeline();
                             if (sslCtx != null)
                                 p.addLast(sslCtx.newHandler(ch.alloc()));
-                            p.addLast(new TimeClientHandler());
+                            p.addLast(new TimeDecoder(), new TimeClientHandler());
                         }
                     });
 
